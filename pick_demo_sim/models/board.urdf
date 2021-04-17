@@ -1,0 +1,69 @@
+<robot name="board">
+  <link name="link">
+    <inertial>
+      <origin xyz="0 0 0.15" />
+      <mass value="100.0" />
+      <!-- (1/12)*mass*(y^2 + z^2)  (1/12)*mass*(x^2 + z^2) (1/12)*mass*(x^2 + y^2) -->
+      <inertia  ixx="10.0" ixy="0.0"  ixz="0.0"  iyy="10.0"  iyz="0.0"  izz="10.0" />
+    </inertial>
+    <visual>
+      <origin xyz="-0.17 0 0.05"/>
+      <geometry>
+        <box size="0.02 0.32 0.1" />
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0.17 0 0.05"/>
+      <geometry>
+        <box size="0.02 0.32 0.1" />
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0.17 0.05"/>
+      <geometry>
+        <box size="0.32 0.02 0.1" />
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 -0.17 0.05"/>
+      <geometry>
+        <box size="0.32 0.02 0.1" />
+      </geometry>
+    </visual>
+    
+    <collision>
+      <origin xyz="-0.17 0 0.15"/>
+      <geometry>
+        <box size="0.02 0.32 0.3" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.17 0 0.15"/>
+      <geometry>
+        <box size="0.02 0.32 0.3" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0.17 0.15"/>
+      <geometry>
+        <box size="0.32 0.02 0.3" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 -0.17 0.15"/>
+      <geometry>
+        <box size="0.32 0.02 0.3" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="link">
+    <material>Gazebo/White</material>
+    <!--mu1>1000</mu1>
+    <mu2>1000</mu2>
+    <maxVel>0.0</maxVel>
+    <minDepth>0.0001</minDepth-->
+  </gazebo>
+  <gazebo>
+    <static>0</static>
+  </gazebo>
+</robot>

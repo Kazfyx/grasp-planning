@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: my_abb_support
+    relative_path: urdf/my_abb.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/my_abb.srdf
+  CONFIG:
+    author_name: ZWR
+    author_email: zhaowenrui@sjtu.edu.cn
+    generated_timestamp: 1551630334

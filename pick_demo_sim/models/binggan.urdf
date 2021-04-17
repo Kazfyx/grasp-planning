@@ -1,0 +1,30 @@
+<robot name="binggan">
+  <link name="link">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="0.1" />
+      <!-- (1/12)*mass*(h^2)  (1/12)*mass*(h^2) (1/2)*mass*(r^2) -->
+      <inertia  ixx="0.000226875" ixy="0.0"  ixz="0.0"  iyy="0.000226875"  iyz="0.0"  izz="0.00006125" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.165" radius="0.035"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.165" radius="0.035"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="link">
+    <material>Gazebo/Blue</material>
+    <mu1>1000</mu1>
+    <mu2>1000</mu2>
+    <maxVel>0.0</maxVel>
+    <minDepth>0.0001</minDepth>
+    <turnGravityOff>0</turnGravityOff>
+  </gazebo>
+</robot>

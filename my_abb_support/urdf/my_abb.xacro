@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+
+<robot name="my_abb" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find my_abb_support)/urdf/arm_gazebo.xacro"/>	
+  <xacro:arm_gazebo prefix=""/>
+  
+  <xacro:include filename="$(find my_abb_support)/urdf/gripper_gazebo.xacro"/>	
+  <xacro:gripper_gazebo prefix=""/>
+
+  <!-- Fix robot to Gazebo world -->
+  <link name="world"/>
+  <joint name="world-base_link-fixed" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+  
+  <!-- Fix gripper to abb arm -->
+  <link name="gripper_tip"/>
+  <link name="flange">
+    <visual>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.1 0.1 0.1 1" />
+      </material>
+    </visual>
+  </link>
+  <gazebo reference="flange">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <joint name="arm-flange" type="fixed">
+    <origin rpy="0 ${pi/2} 0" xyz="0.01 0 0"/>
+    <parent link="tool0"/>
+    <child link="flange"/>
+  </joint>
+  <joint name="flange-gripper_base" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.01"/>
+    <parent link="flange"/>
+    <child link="robotiq_arg2f_base_link"/>
+  </joint>
+  <joint name="arm-gripper_tip" type="fixed">
+    <origin rpy="0 0 0" xyz="0.205 0 0"/>
+    <parent link="tool0"/>
+    <child link="gripper_tip"/>
+  </joint>
+</robot>

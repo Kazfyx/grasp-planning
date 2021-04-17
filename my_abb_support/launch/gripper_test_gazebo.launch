@@ -1,0 +1,25 @@
+<launch>
+	<arg name="paused" default="false" doc="Start gazebo in paused mode" />
+
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/empty.world"/>
+    <arg name="gui" value="true"/>
+    <arg name="paused" value="$(arg paused)"/>
+  </include>
+
+  <!-- urdf xml robot description loaded on the Parameter Server, converting the xacro into a proper urdf file-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find my_abb_support)/urdf/gripper_test.xacro'" />
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="my_abb_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model my_abb" />
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+
+  <!-- init and start Gazebo ros_control interface -->
+  <rosparam file="$(find my_abb_support)/config/gripper_controller1.yaml" command="load" />
+  <node name="my_abb_controller_spawner" pkg="controller_manager" type="spawner" args="gripper_controller" />
+
+</launch>

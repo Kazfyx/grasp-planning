@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+  <!-- spawn the table -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_table" args="-file $(find pick_demo_sim)/models/table.urdf -urdf -x 0.65 -y 0 -z 0 -model table"/>
+  <!--node pkg="gazebo_ros" type="spawn_model" name="spawn_board" args="-file $(find pick_demo_sim)/models/board.urdf -urdf -x 0.65 -y 0 -z 0.02 -model board"/-->
+
+  <!-- spawn the objects -->
+  
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model0" args="-file $(find pick_demo_sim)/models/wangwang.urdf -urdf -x 0.7 -y -0.12 -z 0.065 -model wangwang"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model1" args="-file $(find pick_demo_sim)/models/weiquan.urdf -urdf -x 0.7 -y 0 -z 0.0875 -model weiquan"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model2" args="-file $(find pick_demo_sim)/models/binggan.urdf -urdf -x 0.7 -y 0.12 -z 0.1025 -model binggan"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model3" args="-file $(find pick_demo_sim)/models/leshi.urdf -urdf -x 0.6 -y -0.12 -z 0.123 -model leshi"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model4" args="-file $(find pick_demo_sim)/models/mofang.urdf -urdf -x 0.6 -y 0 -z 0.05 -model mofang"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model5" args="-file $(find pick_demo_sim)/models/dingshuji.urdf -urdf -x 0.6 -y 0.12 -z 0.09 -R 1.5708 -model dingshuji"/>
+
+  
+  <rosparam command="load" file="$(find pick_demo_sim)/config/obj_grasp_pos.yaml"/>
+  
+
+</launch>

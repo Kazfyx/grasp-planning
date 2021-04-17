@@ -1,0 +1,9 @@
+<launch>
+
+
+
+<rosparam command="load" file="$(find pick_demo_sim)/config/obj_grasp_pos.yaml"/>
+
+
+
+</launch>

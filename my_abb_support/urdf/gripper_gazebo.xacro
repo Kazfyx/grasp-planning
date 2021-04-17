@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<xacro:include filename="$(find robotiq_arg2f_model_visualization)/urdf/robotiq_arg2f_140_model_macro.xacro"/>
+
+<xacro:macro name="gripper_gazebo" params="prefix gravityoff:=true selfcollide:=false">
+
+  <!-- get base gripper model -->
+  <xacro:robotiq_arg2f_140 prefix="${prefix}"/>
+
+  <!-- Gazebo-specific link properties -->
+  <gazebo reference="${prefix}left_outer_knuckle">
+    <material>Gazebo/DarkGrey</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>
+  <gazebo reference="${prefix}left_outer_finger">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>
+  <gazebo reference="${prefix}left_inner_knuckle">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>  
+  <gazebo reference="${prefix}left_inner_finger">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+    <kp>1e5</kp>
+    <kd>1.0</kd>
+    <mu1>1000</mu1>
+    <mu2>1000</mu2>
+  </gazebo>
+  <gazebo reference="${prefix}right_outer_knuckle">
+    <material>Gazebo/DarkGrey</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>
+  <gazebo reference="${prefix}right_outer_finger">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>
+  <gazebo reference="${prefix}right_inner_knuckle">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>  
+  <gazebo reference="${prefix}right_inner_finger">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+    <kp>1e5</kp>
+    <kd>1.0</kd>
+    <mu1>1000</mu1>
+    <mu2>1000</mu2>
+  </gazebo>
+  <gazebo reference="${prefix}robotiq_arg2f_base_link">
+    <material>Gazebo/FlatBlack</material>
+    <selfCollide>${selfcollide}</selfCollide>
+    <turnGravityOff>${gravityoff}</turnGravityOff>
+  </gazebo>
+  <!-- closed kinematic chain -->
+  <gazebo>
+    <joint name="left_closed_chain" type="revolute">
+      <parent>${prefix}left_inner_finger</parent>
+      <child>${prefix}left_inner_knuckle</child>
+      <pose>0 0.1 -0.0025 0 0 0</pose>  <!-- expressed in the child link frame -->
+      <axis>
+        <xyz>0 0 1</xyz>  <!-- expressed in the parent model frame -->
+      </axis>
+    </joint>
+    <joint name="right_closed_chain" type="revolute">
+      <parent>${prefix}right_inner_finger</parent>
+      <child>${prefix}right_inner_knuckle</child>
+      <pose>0 0.1 -0.0025 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+  </gazebo>
+  <!-- gazebo grasp plugin -->
+  <gazebo>
+    <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+       <arm>
+          <arm_name>abb_robotiq</arm_name>
+          <palm_link>link_6</palm_link>
+          <gripper_link>${prefix}left_inner_finger</gripper_link>
+          <gripper_link>${prefix}right_inner_finger</gripper_link>
+          <gripper_link>${prefix}left_inner_knuckle</gripper_link>
+          <gripper_link>${prefix}right_inner_knuckle</gripper_link>
+       </arm>
+       <forces_angle_tolerance>100</forces_angle_tolerance>
+       <update_rate>10</update_rate>
+       <grip_count_threshold>3</grip_count_threshold>
+       <max_grip_count>6</max_grip_count>
+       <release_tolerance>0.005</release_tolerance>
+       <disable_collisions_on_attach>false</disable_collisions_on_attach>
+       <contact_topic>__default_topic__</contact_topic>
+    </plugin>
+  </gazebo>
+
+</xacro:macro>
+</robot>

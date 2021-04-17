@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="mesh_link" params="name rpy xyz visualfile collisionfile *material **other">
+		<link name="${name}">	
+			<visual>
+				<geometry>
+					<mesh filename="${visualfile}"/>
+				</geometry>
+			  <origin rpy="${rpy}" xyz="${xyz}"/>
+			  <xacro:insert_block name="material"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="${collisionfile}"/>
+				</geometry>
+			  <origin rpy="${rpy}" xyz="${xyz}"/>
+			</collision>
+			<xacro:insert_block name="other"/>
+		</link>
+	</xacro:macro>
+	
+	<xacro:macro name="fixed_joint" params="name o_xyz o_rpy p_link c_link">
+		<joint name="${name}" type="fixed">
+			<parent link="${p_link}"/>
+			<child link="${c_link}"/>
+			<origin rpy="${o_rpy}" xyz="${o_xyz}"/>
+		</joint>
+	</xacro:macro>
+	
+	<xacro:macro name="chassis" params="prefix">
+	
+	  <xacro:mesh_link name="${prefix}car" rpy="0 0 0" xyz="0 0 0" visualfile="package://my_abb_support/meshes/visual/car.STL" collisionfile="package://my_abb_support/meshes/collision/car_collision.stl">
+		  <material name="grey">
+			  <color rgba="0.6 0.6 0.6 1"/>
+	    </material>
+	    <other/>
+    </xacro:mesh_link>
+    
+    <xacro:mesh_link name="${prefix}controller" rpy="0 0 0" xyz="0 0 0" visualfile="package://my_abb_support/meshes/visual/controller.STL" collisionfile="package://my_abb_support/meshes/collision/controller_collision.stl">
+		  <material name="grey">
+			  <color rgba="0.6 0.6 0.6 1"/>
+	    </material>
+	    <other/>
+    </xacro:mesh_link>
+    
+    <xacro:fixed_joint name="${prefix}car-controller" o_xyz="0 0 0" o_rpy="0 0 0" p_link="car" c_link="controller"/>
+    
+	</xacro:macro>
+	
+</robot>
+
+

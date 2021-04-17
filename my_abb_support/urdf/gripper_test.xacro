@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+
+<robot name="gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <xacro:include filename="$(find my_abb_support)/urdf/gripper_gazebo.xacro"/>	
+  <xacro:gripper_gazebo prefix=""/>
+
+  <!-- Fix robot to Gazebo world -->
+  <link name="world"/>
+  <joint name="world-base_link-fixed" type="fixed">
+    <parent link="world"/>
+    <child link="robotiq_arg2f_base_link"/>
+    <origin rpy="0 ${pi/2} 0" xyz="0 0 0.5"/>
+  </joint>
+  
+  <!-- closed chain -->
+  <!--link name="joint_link1"/>
+  <joint name="inner_knuckle-inner_finger1" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.1 -0.0025"/>
+    <parent link="left_inner_knuckle"/>
+    <child link="joint_link1"/>
+  </joint>
+  <link name="joint_link2"/>
+  <joint name="inner_knuckle-inner_finger2" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.1 -0.0025"/>
+    <parent link="right_inner_knuckle"/>
+    <child link="joint_link2"/>
+  </joint-->
+  
+  <gazebo>
+    <joint name="left_closed_chain" type="revolute">
+      <parent>left_inner_finger</parent>
+      <child>left_inner_knuckle</child>
+      <pose>0 0.1 -0.0025 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <dynamics>
+          <friction>0.01</friction>
+        </dynamics>
+      </axis>
+    </joint>
+    <joint name="right_closed_chain" type="revolute">
+      <parent>right_inner_finger</parent>
+      <child>right_inner_knuckle</child>
+      <pose>0 0.1 -0.0025 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <dynamics>
+          <friction>0.01</friction>
+        </dynamics>
+      </axis>
+    </joint>
+  </gazebo>
+  
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo>
+  
+</robot>

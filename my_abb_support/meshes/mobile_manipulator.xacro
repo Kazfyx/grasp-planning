@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="mobile_manipulator">
+
+<xacro:property name="wheeloffsetX" value="0.38" />
+<xacro:property name="wheeloffsetY" value="0.308" />
+<xacro:property name="wheeloffsetZ" value="0.127" />
+	<xacro:macro name="arm_link" params="name rpy xyz filename collisionfile *material *inertial">
+		<link name="${name}">	
+			<visual>
+				<geometry>
+					<mesh filename="${filename}"/>
+				</geometry>
+			<origin rpy="${rpy}" xyz="${xyz}"/>
+			<xacro:insert_block name="material"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="${collisionfile}"/>
+				</geometry>
+			<origin rpy="${rpy}" xyz="${xyz}"/>
+			</collision>
+			<xacro:insert_block name="inertial"/>
+		</link>
+	</xacro:macro>
+
+	<xacro:macro name="arm_joint" params="name type o_xyz o_rpy a_xyz effort lower upper velocity p_link c_link">
+		<joint name="${name}" type="${type}">
+			<axis xyz="${a_xyz}"/>
+			<limit effort="${effort}" lower="${lower}" upper="${upper}" velocity="${velocity}"/>
+			<parent link="${p_link}"/>
+			<child link="${c_link}"/>
+			<origin rpy="${o_rpy}" xyz="${o_xyz}"/>
+			<!--dynamics damping="0.9"/-->
+		</joint>
+	</xacro:macro>
+
+	<xacro:macro name="wheel_joint" params="name type o_xyz o_rpy a_xyz effort velocity p_link c_link">
+		<joint name="${name}" type="${type}">
+			<axis xyz="${a_xyz}"/>
+			<limit effort="${effort}" velocity="${velocity}"/>
+			<parent link="${p_link}"/>
+			<child link="${c_link}"/>
+			<origin rpy="${o_rpy}" xyz="${o_xyz}"/>
+			<dynamics damping="0.9"/>
+		</joint>
+	</xacro:macro>
+
+	<xacro:macro name="gazebo_link" params="name color gravity collide mu">
+		<gazebo reference="${name}">
+			<mu1>${mu}</mu1>
+   			<mu2>${mu}</mu2>
+			<gravity>${gravity}</gravity>
+			<selfCollide>${collide}</selfCollide>
+			<material>Gazebo/${color}</material>
+			<kp  value="1000000.0" />
+            <kd  value="1.0" />
+            <maxVel  value="100.0" />
+            <minDepth  value="0.0" />
+		</gazebo>
+	</xacro:macro>
+
+        <!--link description-->
+	
+	<link name="tool0"/>
+	<link name="base"/>
+	<link name="base_link"/>
+	<link name="table">
+    	<visual>
+			<geometry>
+				<box size="0.6 0.6 0.02"/>
+			</geometry>
+		    <origin rpy="0 0 0" xyz="0 0 0"/>
+		    <material name="grey">
+			    <color rgba="0.6 0.6 0.6 1"/>
+	        </material>
+		</visual>
+		<collision>
+		    <geometry>
+				<box size="0.6 0.6 0.02"/>
+			</geometry>
+		    <origin rpy="0 0 0" xyz="0 0 0"/>
+	    </collision>
+   	</link>
+   	<link name="gripper">
+    	<visual>
+			<geometry>
+				<mesh filename="package://abb_gazebo/meshes/visual/robotiq_visual.STL"/>
+			</geometry>
+		    <origin rpy="0 0 0" xyz="-0.24 0.01 0"/>
+		    <material name="grey">
+			    <color rgba="0.6 0.6 0.6 1"/>
+	        </material>
+		</visual>
+		<collision>
+		    <geometry>
+				<mesh filename="package://abb_gazebo/meshes/collision/robotiq_collision.STL"/>
+			</geometry>
+		    <origin rpy="0 0 0" xyz="-0.242 -0.002 0"/>
+	    </collision>
+   	</link>
+	
+
+	  
+	<xacro:arm_link name="car" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/car.STL" collisionfile="package://abb_gazebo/meshes/collision/car_collision.stl">
+		<material name="grey">
+			<color rgba="0.6 0.6 0.6 1"/>
+	    </material>
+	    <inertial>
+			<origin rpy="0 0 0" xyz="-0.028996 0.000593 0.112726"/>
+		   	<mass value="1.2605"/>
+		    <inertia ixx="0.0093" ixy="0" ixz="0" iyy="0.0128" iyz="0" izz="0.0119"/>		
+		</inertial>
+    </xacro:arm_link>
+    
+    <xacro:arm_link name="controller" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/controller.STL" collisionfile="package://abb_gazebo/meshes/collision/controller_collision.stl">
+		<material name="grey">
+			<color rgba="0.6 0.6 0.6 1"/>
+	    </material>
+	    <inertial>
+			<origin rpy="0 0 0" xyz="-0.028996 0.000593 0.112726"/>
+		   	<mass value="1.2605"/>
+		    <inertia ixx="0.0093" ixy="0" ixz="0" iyy="0.0128" iyz="0" izz="0.0119"/>		
+		</inertial>
+    </xacro:arm_link>
+
+    
+
+	<xacro:arm_link name="link_0" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Base_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_base.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="-0.028996 0.000593 0.112726"/>
+		   	<mass value="1.2605"/>
+		    <inertia ixx="0.0093" ixy="0" ixz="0" iyy="0.0128" iyz="0" izz="0.0119"/>		
+		</inertial>
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_1" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link1_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link1.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.000928 -0.000663 0.117217"/>
+		   	 <mass value="1.0900"/>
+		    <inertia ixx="0.0103" ixy="0" ixz="0" iyy="0.0085" iyz="0" izz="0.0081"/>		
+		</inertial>
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_2" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link2_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link2.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+			<inertial>
+			<origin rpy="0 0 0" xyz="-0.001257 -0.000516 0.250048"/>
+		   	 <mass value="1.6185"/>
+		    <inertia ixx="0.0454" ixy="0" ixz="0" iyy="0.0427" iyz="0" izz="0.0083"/>		
+		</inertial>s
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_3" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link3_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link3.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.099548 0.000983 0.032329"/>
+		   	 <mass value="0.6880"/>
+		    <inertia ixx="0.0023" ixy="0" ixz="0" iyy="0.0083" iyz="0" izz="0.0076"/>		
+		</inertial>
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_4" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link4_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link4.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.093127 0.001252 0.005029"/>
+		   	 <mass value="0.2531"/>
+		    <inertia ixx="0.0005" ixy="0" ixz="0" iyy="0.0011" iyz="0" izz="0.0011"/>		
+		</inertial>
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_5" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link5_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link5.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.018136 -0.001115 0.000001"/>
+		   	 <mass value="0.578464"/>
+		    <inertia ixx="0.00046353" ixy="0" ixz="0" iyy="0.00100041" iyz="0" izz="0.00084522"/>		
+		</inertial>
+    </xacro:arm_link>
+
+	<xacro:arm_link name="link_6" rpy="0 0 0" xyz="0 0 0" filename="package://abb_gazebo/meshes/visual/IRB120_3-58_IRC5_Link6_rev0.STL" collisionfile="package://abb_gazebo/meshes/collision/irb_120_link6.stl">
+		<material name="orange">
+	            <color rgba="1 0.5 0 1"/>
+	        </material>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.002490 0.000001 0.000001"/>
+		   	 <mass value="0.006235"/>
+		    <inertia ixx="0.00000124" ixy="0" ixz="0" iyy="0.00000063" iyz="0" izz="0.00000063"/>		
+		</inertial>
+    </xacro:arm_link>
+    
+    <!--xacro:arm_link name="gripper" rpy="0 0 0" xyz="-0.24 0 0" filename="package://abb_gazebo/meshes/visual/robotiq_visual.STL" collisionfile="package://abb_gazebo/meshes/collision/robotiq_collision.STL">
+		<material name="grey"/>
+	            
+		<inertial>
+			<origin rpy="0 0 0" xyz="0.002490 0.000001 0.000001"/>
+		   	 <mass value="0.006235"/>
+		    <inertia ixx="0.00000124" ixy="0" ixz="0" iyy="0.00000063" iyz="0" izz="0.00000063"/>		
+		</inertial>
+    </xacro:arm_link-->
+
+
+    <!--joint description-->
+	<joint name="fixed1" type="fixed">
+        <parent link="base_link"/>
+        <child link="car"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+    <joint name="fixed2" type="fixed">
+        <parent link="car"/>
+        <child link="controller"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+    	
+	<joint name="car-link_0" type="fixed">
+    	<parent link="car"/>
+    	<child link="link_0"/>
+    	<origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+        
+    <joint name="base-table" type="fixed">
+    	<parent link="base_link"/>
+    	<child link="table"/>
+    	<origin xyz="0.6 0 -0.02" rpy="0 0 0"/>
+    </joint>    
+    	
+    <joint name="link_0-base" type="fixed">
+    	<parent link="link_0"/>
+    	<child link="base"/>
+    	<origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="link_6-tool0" type="fixed">
+    	<parent link="link_6"/>
+    	<child link="tool0"/>
+    	<origin xyz="0 0 0" rpy="0 1.5707963 0"/>
+    </joint>
+    
+    <joint name="link_6-gripper" type="fixed">
+    	<parent link="link_6"/>
+    	<child link="gripper"/>
+    	<origin xyz="0.25 -0.01 0" rpy="0 0 0"/>
+    </joint>
+		
+
+	  
+	<xacro:arm_joint name="joint_1" type="revolute" o_xyz="0 0 0.166" o_rpy="0 0 0" a_xyz="0 0 1" effort="10000" lower="-1.88" upper="2.88" velocity="4.363" p_link="link_0" c_link="link_1"/>
+
+	<xacro:arm_joint name="joint_2" type="revolute" o_xyz="0 0 0.124" o_rpy="0 0 0" a_xyz="0 1 0" effort="10000" lower="-1.92" upper="1.92" velocity="4.363" p_link="link_1" c_link="link_2"/>
+
+	<xacro:arm_joint name="joint_3" type="revolute" o_xyz="0 0 0.27" o_rpy="0 0 0" a_xyz="0 1 0" effort="10000" lower="-1.92" upper="1.22" velocity="4.363" p_link="link_2" c_link="link_3"/>
+
+	<xacro:arm_joint name="joint_4" type="revolute" o_xyz="0.134 0 0.070" o_rpy="0 0 0" a_xyz="1 0 0" effort="10000" lower="-2.1" upper="2.1" velocity="5.585" p_link="link_3" c_link="link_4"/>
+
+	<xacro:arm_joint name="joint_5" type="revolute" o_xyz="0.168 0 0" o_rpy="0 0 0" a_xyz="0 1 0" effort="10000" lower="-2.09" upper="2.09" velocity="5.585" p_link="link_4" c_link="link_5"/>
+
+	<xacro:arm_joint name="joint_6" type="revolute" o_xyz="0.072 0 0" o_rpy="0 0 0" a_xyz="1 0 0" effort="10000" lower="-3.2" upper="3.2" velocity="7.330" p_link="link_5" c_link="link_6"/>
+
+	
+
+<gazebo>
+	<static>false</static>
+</gazebo>
+
+<xacro:gazebo_link name="car_base" color="Grey" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_0" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_1" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_2" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_3" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_4" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_5" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="link_6" color="Orange" gravity="true" collide="true" mu="0.2"/>
+<xacro:gazebo_link name="wheelLF" color="Black" gravity="true" collide="true" mu="100.0"/>
+<xacro:gazebo_link name="wheelLB" color="Black" gravity="true" collide="true" mu="100.0"/>
+<xacro:gazebo_link name="wheelRF" color="Black" gravity="true" collide="true" mu="100.0"/>
+<xacro:gazebo_link name="wheelRB" color="Black" gravity="true" collide="true" mu="100.0"/>
+
+<!-- camera -->
+<gazebo reference="camera_link">
+<sensor type="camera" name="camera1">
+  <update_rate>30.0</update_rate>
+  <camera name="head">
+    <horizontal_fov>1.3962634</horizontal_fov>
+    <image>
+      <width>800</width>
+      <height>800</height>
+      <format>R8G8B8</format>
+    </image>
+    <clip>
+      <near>0.02</near>
+      <far>300</far>
+    </clip>
+    <noise>
+      <type>gaussian</type>
+      <!-- Noise is sampled independently per pixel on each frame.  
+           That pixel's noise value is added to each of its color
+           channels, which at that point lie in the range [0,1]. -->
+      <mean>0.0</mean>
+      <stddev>0.007</stddev>
+    </noise>
+  </camera>
+  <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+    <alwaysOn>true</alwaysOn>
+    <updateRate>0.0</updateRate>
+    <cameraName>rrbot/camera1</cameraName>
+    <imageTopicName>image_raw</imageTopicName>
+    <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+    <frameName>camera_link</frameName>
+    <hackBaseline>0.07</hackBaseline>
+    <distortionK1>0.0</distortionK1>
+    <distortionK2>0.0</distortionK2>
+    <distortionK3>0.0</distortionK3>
+    <distortionT1>0.0</distortionT1>
+    <distortionT2>0.0</distortionT2>
+  </plugin>
+</sensor>
+</gazebo>  
+
+<transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_1">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_2">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="tran3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_3">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="tran4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_4">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor4">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="tran5">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_5">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor5">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="tran6">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_6">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor6">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="wheelLF_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wheelLFJ">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wheelLF_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="wheelLB_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wheelLBJ">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wheelLB_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="wheelRF_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wheelRFJ">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wheelRF_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<transmission name="wheelRB_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wheelRBJ">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wheelRB_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <robotNamespace>/irb1200</robotNamespace>
+  </plugin>
+</gazebo>
+<!--gazebo referemce="joint_1">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo>
+<gazebo referemce="joint_2">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo>
+<gazebo referemce="joint_3">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo>
+<gazebo referemce="joint_4">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo>
+<gazebo referemce="joint_5">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo>
+<gazebo referemce="joint_6">
+	<implicitSpringDamper>true</implicitSpringDamper>
+</gazebo-->
+</robot>

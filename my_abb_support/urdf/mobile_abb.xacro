@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<robot name="mobile_abb" xmlns:xacro="http://ros.org/wiki/xacro">
+<xacro:include filename="$(find abb_irb120_support)/urdf/irb120_3_58_macro.xacro"/>
+<xacro:include filename="$(find robotiq_arg2f_model_visualization)/urdf/robotiq_arg2f_140_model_macro.xacro"/>
+<xacro:include filename="$(find my_abb_support)/urdf/chassis_macro.xacro"/>
+
+  <xacro:abb_irb120_3_58 prefix="" />
+  <xacro:chassis prefix="" />
+  <!-- Fix arm to chassis -->
+  <xacro:fixed_joint name="base-car" o_xyz="0 0 0" o_rpy="0 0 0" p_link="base_link" c_link="car"/>
+  <!--xacro:robotiq_arg2f_140 prefix=""/-->
+  <link name="gripper">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_abb_support/meshes/visual/robotiq_visual.STL"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <material name="grey">
+        <color rgba="0.6 0.6 0.6 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://my_abb_support/meshes/collision/robotiq_collision.STL"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.002 -0.002 0"/>
+    </collision>
+  </link>
+  <!-- Fix gripper to arm -->
+  <link name="gripper_tip"/>
+  <link name="flange">
+    <visual>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1" />
+      </material>
+    </visual>
+  </link>
+  <xacro:fixed_joint name="arm-flange" o_xyz="0.01 0 0" o_rpy="0 ${pi/2} 0" p_link="tool0" c_link="flange"/>
+  <xacro:fixed_joint name="arm-gripper" o_xyz="0.01 0 0" o_rpy="0 0 0" p_link="tool0" c_link="gripper"/>
+  <!--xacro:fixed_joint name="flange-gripper_base" o_xyz="0 0 0.01" o_rpy="0 0 0" p_link="flange" c_link="robotiq_arg2f_base_link"/-->
+  <xacro:fixed_joint name="arm-gripper_tip" o_xyz="0.25 0 0" o_rpy="0 0 0" p_link="tool0" c_link="gripper_tip"/>
+  <!-- Add table to scene -->
+  <link name="table">
+    <visual>
+      <geometry>
+        <box size="0.6 0.6 0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <material name="grey">
+        <color rgba="0.6 0.6 0.6 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.6 0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+  <xacro:fixed_joint name="base-table" o_xyz="0.6 0 -0.02" o_rpy="0 0 0" p_link="base_link" c_link="table"/>
+
+</robot>
