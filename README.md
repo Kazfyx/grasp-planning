@@ -16,7 +16,7 @@ $ sudo apt-get install ros-kinetic-abb
 $ sudo apt-get install libcgal-dev
 ```
 
-## Compile
+## Compiling
 
 Clone the repository or manually download the files to your ROS catkin workspace and compile them with "catkin_make" command: [instructions](http://wiki.ros.org/catkin/Tutorials/create_a_workspace).
 
