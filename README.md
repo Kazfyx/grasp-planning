@@ -4,17 +4,21 @@ grasp planning based on obstruction degree
 
 Tested in Ubuntu 16.04, ROS Kinetic
 
-## Download
+## Prerequisites
 
-Clone the repository or manually download the files to your ROS catkin workspace.
+ROS "Desktop Full" install: [instructions](http://wiki.ros.org/ROS/Installation).
 
-## Compile
-
-Install dependency CGAL 4.7
+Install dependencies
 ```bash
+$ sudo apt-get install ros-kinetic-moveit
+$ sudo apt-get install ros-kinetic-industrial-core
+$ sudo apt-get install ros-kinetic-abb
 $ sudo apt-get install libcgal-dev
 ```
-Then you can compile with ROS "catkin_make" command.
+
+## Compiling
+
+Clone the repository or manually download the files to your ROS catkin workspace and compile them with "catkin_make" command: [instructions](http://wiki.ros.org/catkin/Tutorials/create_a_workspace).
 
 ## Usage
 
