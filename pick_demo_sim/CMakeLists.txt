@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_perception
   moveit_ros_planning_interface
   pluginlib
-  robotiq_2f_gripper_control
+#  robotiq_2f_gripper_control
   tf2_ros
 )
 

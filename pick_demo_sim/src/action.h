@@ -20,8 +20,8 @@
 #include <geometric_shapes/shape_operations.h>
 //#include <pick_msgs/cloud_tran.h>
 #include <actionlib/client/simple_action_client.h>
-#include <robotiq_2f_gripper_control/Robotiq2FGripper_robot_output.h>
-#include <robotiq_2f_gripper_control/Robotiq2FGripper_robot_input.h>
+//#include <robotiq_2f_gripper_control/Robotiq2FGripper_robot_output.h>
+//#include <robotiq_2f_gripper_control/Robotiq2FGripper_robot_input.h>
 #include <ros/ros.h>
 #include "func.h"
 
