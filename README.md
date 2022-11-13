@@ -15,6 +15,7 @@ $ sudo apt-get install ros-kinetic-industrial-core
 $ sudo apt-get install ros-kinetic-abb
 $ sudo apt-get install libcgal-dev
 ```
+If your system is not Ubuntu 16.04, please install CGAL version 4.7 from source.
 
 ## Compiling
 
