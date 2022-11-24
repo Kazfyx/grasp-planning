@@ -8,14 +8,19 @@ Tested in Ubuntu 16.04, ROS Kinetic
 
 ROS "Desktop Full" install: [instructions](http://wiki.ros.org/ROS/Installation).
 
-Install dependencies
+Install ROS packages
 ```bash
 $ sudo apt-get install ros-kinetic-moveit
+$ sudo apt-get install ros-kinetic-trac-ik-kinematics-plugin
 $ sudo apt-get install ros-kinetic-industrial-core
 $ sudo apt-get install ros-kinetic-abb
+$ sudo apt-get install ros-kinetic-gazebo-ros-pkgs ros-kinetic-gazebo-ros-control
+$ sudo apt-get install ros-kinetic-ros-control ros-kinetic-ros-controllers
+```
+Install CGAL 4.7
+```bash
 $ sudo apt-get install libcgal-dev
 ```
-If your system is not Ubuntu 16.04, please install CGAL version 4.7 from source.
 
 ## Compiling
 
